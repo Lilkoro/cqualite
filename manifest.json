@@ -1,0 +1,16 @@
+{
+    "short_name": "CQLT-Audit",
+    "name" : "C-QuALité-Audit",
+    "icons" : [
+        {
+            "src" : "./img/ico.png",
+            "sizes": "240x240",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "index.php",
+    "background_color": "#131312",
+    "display": "standalone",
+    "scope": "/",
+    "theme_color": "#131312"
+}

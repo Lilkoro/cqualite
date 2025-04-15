@@ -1,0 +1,233 @@
+@media screen and (min-width: 866px){
+
+    h1{
+        font-size: 100px;
+    }
+
+    #txtAudit{
+        color: white;
+        font-size: 60px;
+    }
+    
+    .bleu{
+        background-color: #00BCD4;
+        opacity: 23%;
+        border-radius: 56px;
+        height: 400px;
+        width: 410px;
+        display: flex;
+        position: absolute;
+        top: 1px;
+        left: 13%;
+        z-index: 1;
+    }
+
+    .fantom{
+        background-color: #00BCD4;
+        opacity: 0%;
+        border-radius: 56px;
+        height: 400px;
+        width: 410px;
+        display: flex;
+        position: absolute;
+        left: 64%;
+        z-index: 1;
+    }
+
+    .fantom.left{
+        animation: rightToLeft 1.7s forwards;
+    }
+
+    .fantom.right{
+        animation: leftToRight 1.7s forwards;
+    }
+
+    .bleu.left{
+        animation: rightToLeft 1.7s forwards;
+    }
+
+    .bleu.right{
+        animation: leftToRight 1.7s forwards;
+    }
+
+    .logo{
+        height: 275px;
+        width: 275px;
+    }
+
+    .tete{
+        height: 400px;
+        width: 90%;
+        margin-bottom: 50px;
+        flex-direction: row;
+        justify-content: space-around;
+        align-content: center;
+        flex-wrap: wrap;
+        align-items: flex-end;
+    }
+
+    .newAudit{
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .audits{
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    @keyframes leftToRight {
+        from    {left: 14%;}
+        to      {left: 64%;}
+    }
+    @keyframes rightToLeft {
+        from    {left: 64%;}
+        to      {left: 14%;}
+    }
+    @keyframes visible {
+        from    {opacity: 0%;}
+        to      {opacity: 100%;}
+    }
+    @keyframes invisible {
+        from    {opacity: 100%;}
+        to      {opacity: 0%;}
+    }
+
+    input::placeholder{
+        color: white;
+    }
+
+    #form {
+        position: relative;
+        display: flex;
+        margin-top: 20px;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        height: 1400px;
+    }
+
+    .na{
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }    
+    .na.visible{
+        animation: visible 1s forwards;
+    }
+    .na.invisible{
+        display: none;
+        animation: invisible 1s forwards;
+    }
+
+    .a{
+        display: none;
+    }
+    .a.visible{
+        display: flex;
+        animation: visible 1s forwards;
+        flex-direction: column;
+        align-items: center;
+    }
+    .a.invisible{
+        display: none;
+        animation: invisible 1s forwards;
+    }
+
+    .a > h1{
+        margin-bottom: 20px;
+    }
+    .filter{
+        position: relative;
+        display: flex;
+        height: 220px;
+        width: 1840px;
+        flex-direction: row;
+        justify-content: space-around;
+
+    }
+
+    .filter > #select {
+        font-size: 50px;
+        height: 100%;
+        width: 800px;
+        padding-block: 0;
+        padding-inline: 0;
+        border-width: 0;
+    }
+
+    .btn.audit{
+        margin: 20px 0 0 0;
+        width: 400px;
+    }
+
+    .btn.client{
+        margin-left: 15px;
+        width: 200px;
+    }
+
+    .container{
+        margin-top: 20px;
+        width: 1700px;
+        height: 1400px;
+        overflow-x: hidden;
+        overflow-y: scroll;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    table{
+        width: 100%;
+        height: auto;
+        position: relative;
+        background-color: #2E2E2E;
+        font-size: 50px;
+        color: #FFFFFF;
+        border-collapse: collapse;
+        border-radius: 50px;
+        text-align: center;
+        box-shadow: inset 0px -50px 20px 7px rgb(0 0 0 / 25%);
+    }
+
+    th,td {
+        border: 1px solid #FFFFFF;
+        inline-size: 200px;
+        word-break: break-all;
+        padding: 25px 0 25px 0;
+    }
+
+    table tr:first-child th {
+        border-top: 0;
+        border-left: 0;
+    }
+    table tr:last-child td {
+        border-bottom: 0;
+    }
+    table tr td:first-child,
+    table tr th:first-child {
+        border-left: 0; 
+    }
+    table tr td:last-child,
+    table tr th:last-child {
+        border-right: 0;
+    }
+
+    #mama{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+
+    #resize{
+        width: 30%;
+        height: 30%;
+    }
+}
