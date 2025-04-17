@@ -128,7 +128,7 @@ function displayQuestion($idTheme, $nbQuest)
                 </td></tr>
               </table>';
         echo '<label for="photo' . $question["id"] . '" class="btnd">Photo</label>
-              <input type="file" id="photo' . $question["id"] . '" class="photo1" name="photo#' . $question["id"] . '" accept=".jpg, .jpeg, .png" onchange="change(\'photo' . $question["id"] . '\')" multiple/>';
+              <input type="file" id="photo' . $question["id"] . '" class="photo1" name="photo#' . $question["id"] . '[]" accept=".jpg, .jpeg, .png" onchange="change(\'photo' . $question["id"] . '\')" multiple/>';
     }
 }
 function displayTheme()
