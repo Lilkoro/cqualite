@@ -1,10 +1,20 @@
 <?php
 require("./config/display.php");
 require("./config/sql.php"); // Inclure la connexion à la base de données
+echo '<script src="config/script.js"></script>';
+$previousName = $_POST["previousName"] ?? null;
 
-$temp = $_POST["client"] ?? null; // Récupérer le nom du client depuis la requête POST
+// Appeler la procédure stockée dupliAudit
+$stmt = $conn->prepare("CALL dupliAudit(:name, :previousname, @fullTableName)");
+$stmt->bindParam(':name', $previousName, PDO::PARAM_STR);
+$stmt->bindParam(':previousname', $previousName, PDO::PARAM_STR);
+$stmt->bindParam(':name', $previousName, PDO::PARAM_STR);
+$stmt->execute();
 
-$client = explode('#', $temp); // Récupérer le nom du client
+// Récupérer la valeur de la variable de sortie
+$result = $conn->query("SELECT @fullTableName AS fullTableName");
+$row = $result->fetch(PDO::FETCH_ASSOC);
+$fullTableName = $row['fullTableName'] ?? null;
 ?>
 
 <!DOCTYPE html>
@@ -27,7 +37,7 @@ $client = explode('#', $temp); // Récupérer le nom du client
     </div>
     <div class="tete">
         <button class="btn" onclick="history.back()">Retour</button>
-        <h1 class="titre">Audit pour : <?php echo @$client[0]; ?></h1>
+        <h1 class="titre">Audit pour : <?php echo @$fullTableName; ?></h1>
     </div>
 
     <select name="whatTheme" id="select">
@@ -48,9 +58,9 @@ $client = explode('#', $temp); // Récupérer le nom du client
 
     <form action="./config/agregation.php" method="POST" id="form" enctype="multipart/form-data">
         <input type="text" name="ok" id="ok" value="ok" style="display: none;">
-        <input type="text" name="nomClient" id="ok" value="<?php echo @$temp; ?>" style="display: none;">
+        <input type="text" name="nomClient" id="ok" value="<?php echo @$fullTableName; ?>" style="display: none;">
         <div class="supercontainer">
-            <?php displayTheme(); ?>
+            <?php displayTheme($fullTableName); ?>
         </div>
     </form>
 

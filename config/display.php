@@ -30,37 +30,35 @@ function allAudit()
     require(__DIR__ . "/sql.php");
     $client = "SELECT Nom FROM `entreprise`;";
     foreach ($conn->query($client) as $row) {
-        $sql = $conn->prepare("show tables like :client");
+        $sql = $conn->prepare("show tables like :client ;");
         $sql->execute(['client' => $row["Nom"] . "%"]);
-        $info = $sql->fetch();
+        $info = $sql->fetchAll();
         if ($info) {
             array_push($historicClient, $info);
         }
     }
-    foreach ($historicClient as $client) {
-        $nom = trim($client[0]);
-        $sql = $conn->prepare("SELECT etat FROM `$nom` WHERE id= 161 ;");
-        $sql->execute();
-        $temp = $sql->fetch();
-        $etat = $temp["etat"];
-        if ($etat == 0) {
-            $etat = "Brouillon";
-        } else if ($etat == 1) {
-            $etat = "A vérifier";
-        } else {
-            $etat = "Terminé";
+    if (!empty($historicClient)) {
+        foreach ($historicClient as $client) {
+            $nom = $client[0];
+            $sql = $conn->prepare("SELECT etat FROM `$nom` WHERE id= 161 ;");
+            $sql->execute();
+            $temp = $sql->fetch();
+            $etat = $temp["etat"];
+            if ($etat == 0) {
+                $etat = "Terminé";
+            }
+            // NE PAS COPIER COLLER BRUT
+            $sql = $conn->prepare("SELECT create_time FROM INFORMATION_SCHEMA.TABLES WHERE table_name = :client");
+            $sql->execute(['client' => $nom]);
+            $temp = $sql->fetch();
+            $dateCrea = $temp["create_time"];
+            // echo "Nom : ". $nom ." DateCrea : ". $dateCrea ." Etat : ". $etat ."<br>";
+            echo "<tbody>";
+            echo "<td>" . $nom . "</td>";
+            echo "<td>" . $dateCrea . "</td>";
+            echo '<td> <div id="mama">' . $etat . '<form action="FicheAudit.php" method="POST" id="resize"><input type="text" name="audit" id="audit" value="' . $nom . '" style="display: none;"><input class="btn" type="submit" value="Editer"/></form></div>';
+            echo "</tbody>";
         }
-        // NE PAS COPIER COLLER BRUT
-        $sql = $conn->prepare("SELECT create_time FROM INFORMATION_SCHEMA.TABLES WHERE table_name = :client");
-        $sql->execute(['client' => $nom]);
-        $temp = $sql->fetch();
-        $dateCrea = $temp["create_time"];
-        // echo "Nom : ". $nom ." DateCrea : ". $dateCrea ." Etat : ". $etat ."<br>";
-        echo "<tbody>";
-        echo "<td>" . $nom . "</td>";
-        echo "<td>" . $dateCrea . "</td>";
-        echo '<td> <div id="mama">' . $etat . '<form action="FicheAudit.php" method="POST" id="resize"><input type="text" name="audit" id="audit" value="' . $nom . '" style="display: none;"><input class="btn" type="submit" value="Editer"/></form></div>';
-        echo "</tbody>";
     }
 }
 
@@ -71,10 +69,14 @@ function pretty($list)
     echo '</pre>';
 }
 
-function displayQuestion($idTheme, $nbQuest)
+function displayQuestion($idTheme, $nbQuest, $state)
 {
     require(__DIR__ . "/sql.php");
-    $query = $conn->prepare("SELECT * FROM questionaudit WHERE idTheme = :idTheme");
+    if ($state == "new") {
+        $query = $conn->prepare("SELECT * FROM questionaudit WHERE idTheme = :idTheme");
+    } else {
+        $query = $conn->prepare("SELECT * FROM `$state` WHERE idTheme = :idTheme");
+    }
     $query->execute(["idTheme" => $idTheme]);
     $questionTheme = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -100,7 +102,6 @@ function displayQuestion($idTheme, $nbQuest)
                 break;
             case "1":
                 $check1 = "checked";
-                $completedQuestions++;
                 break;
             case "NO":
                 $checkNO = "checked";
@@ -131,9 +132,8 @@ function displayQuestion($idTheme, $nbQuest)
               <input type="file" id="photo' . $question["id"] . '" class="photo1" name="photo#' . $question["id"] . '[]" accept=".jpg, .jpeg, .png" onchange="change(\'photo' . $question["id"] . '\')" multiple/>';
     }
 }
-function displayTheme()
+function displayTheme($state = "new")
 {
-
 
     require(__DIR__ . "/sql.php");
     $completionRate = 0;
@@ -147,11 +147,9 @@ function displayTheme()
         echo "<div id='completion-rate-" . $theme['id'] . "' class='completion-rate'>$completionRate%</div>";
         echo '<div id="arrow' . $theme["id"] . '" class="arrow"><img src="img/arrowDown.png" alt="fleche"></div></div>
         </div>';
-        displayQuestion($theme["id"], $theme['nbQuest']);
+        displayQuestion($theme["id"], $theme['nbQuest'], $state);
         echo "</div>";
     }
 
     // pretty($info);
 }
-
-echo '<script src="config/script.js"></script>';

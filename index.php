@@ -1,7 +1,7 @@
 <?php
 require("./config/display.php");
-
-if (isset($_POST["ok"])){
+echo '<script src="config/script.js"></script>';
+if (isset($_POST["ok"])) {
     $cheminTemporaire = $_FILES['photo1']['tmp_name'];
     echo $cheminTemporaire;
     // Renommez le fichier en "Menu.jpg"
@@ -14,18 +14,20 @@ if (isset($_POST["ok"])){
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" type="text/css" media="all" href="<?php echo './style/style.css?id=' . time(); ?>"/>
-    <link rel="stylesheet" type="text/css" media="all" href="<?php echo './style/accueil.css?id=' . time(); ?>"/>
+    <link rel="stylesheet" type="text/css" media="all" href="<?php echo './style/style.css?id=' . time(); ?>" />
+    <link rel="stylesheet" type="text/css" media="all" href="<?php echo './style/accueil.css?id=' . time(); ?>" />
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/x-icon" href="./img/ico.png">
     <script src="script/app.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-    <script>eruda.init();</script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+    <script>eruda.init();</script> -->
     <title>Accueil</title>
 </head>
+
 <body>
     <div class="header">
         <img src="img/headerGrand.png" alt="header" class="imgc">
@@ -68,4 +70,5 @@ if (isset($_POST["ok"])){
         </div>
     </div>
 </body>
+
 </html>

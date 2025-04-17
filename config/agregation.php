@@ -2,7 +2,7 @@
 
 require_once("./sql.php");
 require_once("./display.php");
-
+echo '<script src="./script.js"></script>';
 $nomClient = $_POST["nomClient"];
 $id = explode("#", $nomClient);
 $nomClient = $id[0];
@@ -14,10 +14,13 @@ if (!is_dir($photoDir)) {
     mkdir($photoDir, 0777, true);
 }
 
-// Appeler la procédure stockée newAudit
-$stmt = $conn->prepare("CALL newAudit(:client)");
-$stmt->bindParam(':client', $nomClient, PDO::PARAM_STR);
-$stmt->execute();
+if (!str_contains($nomClient, "_")) {
+    // Appeler la procédure stockée newAudit
+    $stmt = $conn->prepare("CALL newAudit(:client)");
+    $stmt->bindParam(':client', $nomClient, PDO::PARAM_STR);
+    $stmt->execute();
+}
+
 
 // Remplir le tableau avec les données de la requête POST
 foreach ($_POST as $key => $value) {
@@ -62,3 +65,4 @@ foreach ($_POST as $key => $value) {
         }
     }
 }
+header("Location: ../index.php?success=1&client=$nomClient");
