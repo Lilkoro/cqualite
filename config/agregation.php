@@ -4,7 +4,7 @@ require_once("./sql.php");
 require_once("./display.php");
 
 $nomClient = $_POST["nomClient"];
-
+    
 $client = $_POST["client"];
 $id = explode("#", $client);
 $client = $id[0];

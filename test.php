@@ -5,7 +5,7 @@ function selectModele()
     require(__DIR__ . "/sql.php");
     $sql = "SELECT * FROM `modelaudit`;";
     echo '<select name="modele" id="select" form="form" required>';
-    echo '<option value="default">Choisissez un modèle pour l\'Audit</option>';
+    echo '<option value="default">Choisisez un modèle pour l\'Audit</option>';
     foreach ($conn->query($sql) as $row) {
         echo '<option value="' . $row["id"] . '">' . $row["nomModelAudit"] . '</option>';
     }
@@ -17,7 +17,7 @@ function selectClient()
     require(__DIR__ . "/sql.php");
     $sql = "SELECT id, Nom FROM `entreprise`;";
     echo '<select name="client" id="select" form="form" required>';
-    echo '<option value="default">Choisissez un Client</option>';
+    echo '<option value="default">Choisisez un Client</option>';
     foreach ($conn->query($sql) as $row) {
         echo '<option value="' . $row["Nom"] . '#' . $row["id"] . '">' . $row["Nom"] . '</option>';
     }
@@ -51,10 +51,11 @@ function allAudit()
             $etat = "Terminé";
         }
         // NE PAS COPIER COLLER BRUT
-        $sql = $conn->prepare("SELECT create_time FROM INFORMATION_SCHEMA.TABLES WHERE table_name = :client");
-        $sql->execute(['client' => $nom]);
+		$sql = $conn->prepare("SELECT timestamp FROM `$nom` WHERE id = 161;");
+        $sql->execute();
         $temp = $sql->fetch();
-        $dateCrea = $temp["create_time"];
+        $dateCrea = $temp["timestamp"];
+      	$dateCrea = substr($dateCrea, 0, -10);
         // echo "Nom : ". $nom ." DateCrea : ". $dateCrea ." Etat : ". $etat ."<br>";
         echo "<tbody>";
         echo "<td>" . $nom . "</td>";
@@ -83,10 +84,10 @@ function displayQuestion($idTheme, $nbQuest)
     foreach ($questionTheme as $question) {
         $check_2 = null;
         $check_1 = null;
-        $check0 = null;
+        $check0 = null;   
         $check1 = null;
         $checkNO = null;
-        $checkSO = null;
+        $checkSO = null; 
 
         switch ($question["note"]) {
             case "-2":
@@ -98,7 +99,7 @@ function displayQuestion($idTheme, $nbQuest)
             case "0":
                 $check0 = "checked";
                 break;
-            case "1":
+            case "1":  
                 $check1 = "checked";
                 $completedQuestions++;
                 break;
@@ -122,10 +123,10 @@ function displayQuestion($idTheme, $nbQuest)
                 </div>
               </div>';
         echo '<table>
-                <tr><td>
+                        <tr><td>
                     <textarea name="obsEcart#' . $question["id"] . '" cols="40" rows="5" placeholder="Observation/Ecarts constatés ...">' . $question["obsEcart"] . '</textarea>
                     <textarea name="suggPlanAction#' . $question["id"] . '" cols="40" rows="5" placeholder="Suggestion de plan d\'action par l\'auditeur...">' . $question["suggPlanAction"] . '</textarea>
-                </td></tr>
+                        </td></tr>
               </table>';
         echo '<label for="photo' . $question["id"] . '" class="btnd">Photo</label>
               <input type="file" id="photo' . $question["id"] . '" class="photo1" name="photo#' . $question["id"] . '" accept=".jpg, .jpeg, .png" onchange="change(\'photo' . $question["id"] . '\')" multiple/>';

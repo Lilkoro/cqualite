@@ -12,7 +12,9 @@ if (isset($_POST["ok"])) {
     // Déplacez le nouveau fichier vers le dossier "Images"
     move_uploaded_file($cheminTemporaire, $cheminDestination);
 }
-
+$temp = $_POST["client"] ?? null; // Récupérer le nom du client depuis la requête POST
+// Séparer le nom et le chiffre
+$client = explode('#', $temp); // Récupérer le nom du client
 ?>
 
 <!DOCTYPE html>
@@ -35,7 +37,7 @@ if (isset($_POST["ok"])) {
     </div>
     <div class="tete">
         <button class="btn" onclick="history.back()">Retour</button>
-        <h1 class="titre">Audit pour : <?php echo @$client; ?></h1>
+        <h1 class="titre">Audit pour : <?php echo @$client[0]; ?></h1>
     </div>
 
     <select name="whatTheme" id="select">
@@ -56,7 +58,7 @@ if (isset($_POST["ok"])) {
 
     <form action="./config/agregation.php" method="POST" id="form" enctype="multipart/form-data">
         <input type="text" name="ok" id="ok" value="ok" style="display: none;">
-        <input type="text" name="nomClient" id="ok" value="<?php echo @$client; ?>" style="display: none;">
+        <input type="text" name="nomClient" id="ok" value="<?php echo @$temp; ?>" style="display: none;">
         <div class="supercontainer">
             <?php displayTheme(); ?>
         </div>

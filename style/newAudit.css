@@ -101,7 +101,6 @@ input[type=radio]{
 #form{
     position: relative;
     display: flex;
-    width: 2000px;
     height: auto;
     max-height: 23000px;
     justify-content: center;
