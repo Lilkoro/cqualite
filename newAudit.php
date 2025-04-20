@@ -17,6 +17,7 @@ $client = explode('#', $temp); // Récupérer le nom du client
     <link rel="stylesheet" type="text/css" media="all" href="<?php echo './style/newAudit.css?id=' . time(); ?>" />
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/x-icon" href="./img/ico.png">
+    <script src="config/script.js"></script>
     <script src="script/app.js"></script>
     <title>Accueil</title>
 </head>

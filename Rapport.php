@@ -125,6 +125,8 @@ $summaryData = [
     'B' => 0,
     'C' => 0,
     'D' => 0,
+    'NO' => 0,
+    'SO' => 0,
     'blank' => 0,
     'total' => 0
 ];
@@ -617,6 +619,12 @@ foreach ($themes as $themeId => $themeName) {
                             } elseif ($question['note'] == '-2') {
                                 $ratingClass = 'rating-d';
                                 $summaryData['D']++;
+                            } elseif ($question['note'] == 'NO') {
+                                $ratingClass = 'rating-blank';
+                                $summaryData['NO']++;
+                            } elseif ($question['note'] == 'SO') {
+                                $ratingClass = 'rating-blank';
+                                $summaryData['SO']++;
                             } else {
                                 $summaryData['blank']++;
                             }
@@ -665,6 +673,8 @@ foreach ($themes as $themeId => $themeName) {
         document.getElementById('count-b').textContent = <?php echo $summaryData['B']; ?>;
         document.getElementById('count-c').textContent = <?php echo $summaryData['C']; ?>;
         document.getElementById('count-d').textContent = <?php echo $summaryData['D']; ?>;
+        document.getElementById('count-no').textContent = <?php echo $summaryData['NO']; ?>;
+        document.getElementById('count-so').textContent = <?php echo $summaryData['SO']; ?>;
         document.getElementById('count-blank').textContent = <?php echo $summaryData['blank']; ?>;
 
         // Calculate completion percentage

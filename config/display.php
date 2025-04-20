@@ -1,5 +1,4 @@
 <?php
-
 function selectModele()
 {
     require(__DIR__ . "/sql.php");
@@ -22,39 +21,6 @@ function selectClient()
         echo '<option value="' . $row["Nom"] . '#' . $row["id"] . '">' . $row["Nom"] . '</option>';
     }
     echo '</select>';
-}
-
-function allAudit()
-{
-    $historicClient = array();
-    require(__DIR__ . "/sql.php");
-    $client = "SELECT Nom FROM `entreprise`;";
-    foreach ($conn->query($client) as $row) {
-        $sql = $conn->prepare("show tables like :client;");
-        $sql->execute(['client' => $row["Nom"] . "%"]);
-        $info = $sql->fetchAll();
-        if ($info) {
-            array_push($historicClient, $info);
-        }
-    }
-    if (!empty($historicClient)) {
-        foreach ($historicClient as $clients) {
-            foreach ($clients as $client) {
-                $nom = $client[0];
-                // NE PAS COPIER COLLER BRUT
-                $sql = $conn->prepare("SELECT create_time FROM INFORMATION_SCHEMA.TABLES WHERE table_name = :client");
-                $sql->execute(['client' => $nom]);
-                $temp = $sql->fetch();
-                $dateCrea = $temp["create_time"];
-                // echo "Nom : ". $nom ." DateCrea : ". $dateCrea ." Etat : ". $etat ."<br>";
-                echo "<tbody>";
-                echo "<td>" . $nom . "</td>";
-                echo "<td>" . $dateCrea . "</td>";
-                echo '<td> <div id="mama"> NULL <form action="FicheAudit.php" method="POST" id="resize"><input type="text" name="audit" id="audit" value="' . $nom . '" style="display: none;"><input class="btn" type="submit" value="Editer"/></form></div>';
-                echo "</tbody>";
-            }
-        }
-    }
 }
 
 function pretty($list)
