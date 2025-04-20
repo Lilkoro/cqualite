@@ -2,19 +2,32 @@
 require("./config/display.php");
 require("./config/sql.php"); // Inclure la connexion à la base de données
 echo '<script src="config/script.js"></script>';
+
 $previousName = $_POST["previousName"] ?? null;
+// Check if previousName is set
+if (is_null($previousName)) {
+    die("Error: 'previousName' is not set or is NULL.");
+}
 
-// Appeler la procédure stockée dupliAudit
-$stmt = $conn->prepare("CALL dupliAudit(:name, :previousname, @fullTableName)");
-$stmt->bindParam(':name', $previousName, PDO::PARAM_STR);
-$stmt->bindParam(':previousname', $previousName, PDO::PARAM_STR);
-$stmt->bindParam(':name', $previousName, PDO::PARAM_STR);
-$stmt->execute();
+try {
+    $stmt = $conn->prepare("CALL dupliAudit(:name, :previousTable, @fullTableName)");
+    $stmt->bindParam(':name', $previousName, PDO::PARAM_STR);
+    $stmt->bindParam(':previousTable', $previousName, PDO::PARAM_STR);
+    $stmt->execute();
 
-// Récupérer la valeur de la variable de sortie
-$result = $conn->query("SELECT @fullTableName AS fullTableName");
-$row = $result->fetch(PDO::FETCH_ASSOC);
-$fullTableName = $row['fullTableName'] ?? null;
+    // Récupérer la valeur de la variable de sortie
+    $result = $conn->query("SELECT @fullTableName AS fullTableName");
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    $fullTableName = $row['fullTableName'] ?? null;
+
+    if ($fullTableName) {
+        echo "Table créée : " . htmlspecialchars($fullTableName);
+    } else {
+        echo "Erreur : Impossible de récupérer le nom de la table.";
+    }
+} catch (PDOException $e) {
+    die("SQL Error: " . $e->getMessage());
+}
 ?>
 
 <!DOCTYPE html>
@@ -37,7 +50,7 @@ $fullTableName = $row['fullTableName'] ?? null;
     </div>
     <div class="tete">
         <button class="btn" onclick="history.back()">Retour</button>
-        <h1 class="titre">Audit pour : <?php echo @$fullTableName; ?></h1>
+        <h1 class="titre">Audit pour : <?php echo htmlspecialchars($fullTableName); ?></h1>
     </div>
 
     <select name="whatTheme" id="select">

@@ -1,5 +1,4 @@
 <?php
-ob_start(); // Commence la mise en mémoire tampon
 require(__DIR__ . "/config/sql.php");
 require(__DIR__ . "/config/display.php");
 // Database connection parameters
