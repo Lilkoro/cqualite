@@ -40,23 +40,7 @@ if (isset($_POST["ok"])) {
     </div>
     <div class="a" id="a">
         <h1>Historique des audits : </h1>
-        <div class="filter">
-            <input type="date" name="date" id="select">
-            <input type="text" name="ref" id="select" placeholder="Réference">
-        </div>
-        <input type="button" name="btn" id="btn" class="btn audit" value="Rechercher">
-        <div class="container">
-            <table>
-                <thead>
-                    <tr>
-                        <th scope="col">Nom du Client</th>
-                        <th scope="col">Date de l'audit</th>
-                        <th scope="col">Etat de l'audit</th>
-                    </tr>
-                </thead>
-                <?php allAudit(); ?>
-            </table>
-        </div>
+        <input type="button" name="btn" id="btn" class="btn audit" value="Accédez au Panel d'Audit" onclick="window.location.href='Rapport.php'">
     </div>
     <div class="na" id="na">
         <h1>Nouvel Audit : </h1>

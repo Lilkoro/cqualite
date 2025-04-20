@@ -30,7 +30,7 @@ function allAudit()
     require(__DIR__ . "/sql.php");
     $client = "SELECT Nom FROM `entreprise`;";
     foreach ($conn->query($client) as $row) {
-        $sql = $conn->prepare("show tables like :client ;");
+        $sql = $conn->prepare("show tables like :client;");
         $sql->execute(['client' => $row["Nom"] . "%"]);
         $info = $sql->fetchAll();
         if ($info) {
@@ -38,26 +38,21 @@ function allAudit()
         }
     }
     if (!empty($historicClient)) {
-        foreach ($historicClient as $client) {
-            $nom = $client[0];
-            $sql = $conn->prepare("SELECT etat FROM `$nom` WHERE id= 161 ;");
-            $sql->execute();
-            $temp = $sql->fetch();
-            $etat = $temp["etat"];
-            if ($etat == 0) {
-                $etat = "Terminé";
+        foreach ($historicClient as $clients) {
+            foreach ($clients as $client) {
+                $nom = $client[0];
+                // NE PAS COPIER COLLER BRUT
+                $sql = $conn->prepare("SELECT create_time FROM INFORMATION_SCHEMA.TABLES WHERE table_name = :client");
+                $sql->execute(['client' => $nom]);
+                $temp = $sql->fetch();
+                $dateCrea = $temp["create_time"];
+                // echo "Nom : ". $nom ." DateCrea : ". $dateCrea ." Etat : ". $etat ."<br>";
+                echo "<tbody>";
+                echo "<td>" . $nom . "</td>";
+                echo "<td>" . $dateCrea . "</td>";
+                echo '<td> <div id="mama"> NULL <form action="FicheAudit.php" method="POST" id="resize"><input type="text" name="audit" id="audit" value="' . $nom . '" style="display: none;"><input class="btn" type="submit" value="Editer"/></form></div>';
+                echo "</tbody>";
             }
-            // NE PAS COPIER COLLER BRUT
-            $sql = $conn->prepare("SELECT create_time FROM INFORMATION_SCHEMA.TABLES WHERE table_name = :client");
-            $sql->execute(['client' => $nom]);
-            $temp = $sql->fetch();
-            $dateCrea = $temp["create_time"];
-            // echo "Nom : ". $nom ." DateCrea : ". $dateCrea ." Etat : ". $etat ."<br>";
-            echo "<tbody>";
-            echo "<td>" . $nom . "</td>";
-            echo "<td>" . $dateCrea . "</td>";
-            echo '<td> <div id="mama">' . $etat . '<form action="FicheAudit.php" method="POST" id="resize"><input type="text" name="audit" id="audit" value="' . $nom . '" style="display: none;"><input class="btn" type="submit" value="Editer"/></form></div>';
-            echo "</tbody>";
         }
     }
 }
@@ -79,8 +74,6 @@ function displayQuestion($idTheme, $nbQuest, $state)
     }
     $query->execute(["idTheme" => $idTheme]);
     $questionTheme = $query->fetchAll(PDO::FETCH_ASSOC);
-
-    $totalQuestions = count($questionTheme);
 
     foreach ($questionTheme as $question) {
         $check_2 = null;
