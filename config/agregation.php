@@ -14,13 +14,30 @@ if (!is_dir($photoDir)) {
     mkdir($photoDir, 0777, true);
 }
 
-if (!str_contains($nomClient, "_")) {
-    // Appeler la procédure stockée newAudit
+// Vérifier si la table existe
+$like = $nomClient . "%"; // Utiliser le nom de la table avec un joker
+$tableCheck = $conn->query("SHOW TABLES LIKE '$like'");
+$a = $tableCheck->fetchAll(); // Récupérer les résultats de la requête
+$rowNumbers = $tableCheck->rowCount();
+if ($rowNumbers == 0) {
+    // Si la table n'existe pas, créer une nouvelle table
     $stmt = $conn->prepare("CALL newAudit(:client)");
     $stmt->bindParam(':client', $nomClient, PDO::PARAM_STR);
     $stmt->execute();
-}
+    $validTableName = $nomClient; // Nom de la nouvelle table
+} else {
+    // Si la table existe, dupliquer la table existante
+    $previousTable = $a[$rowNumbers - 1][0];
+    $stmt = $conn->prepare("CALL dupliAudit(:name, :previousTable, @fullTableName)");
+    $stmt->bindParam(':name', $nomClient, PDO::PARAM_STR);
+    $stmt->bindParam(':previousTable', $previousTable, PDO::PARAM_STR);
+    $stmt->execute();
 
+    // Récupérer le nom complet de la nouvelle table
+    $result = $conn->query("SELECT @fullTableName AS fullTableName");
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    $validTableName = $row['fullTableName'];
+}
 
 // Remplir le tableau avec les données de la requête POST
 foreach ($_POST as $key => $value) {
@@ -41,7 +58,7 @@ foreach ($_POST as $key => $value) {
                     if ($photos["error"][$i] === UPLOAD_ERR_OK) {
                         $tmpName = $photos["tmp_name"][$i];
                         $extension = pathinfo($photos["name"][$i], PATHINFO_EXTENSION);
-                        $fileName = "photo#$id-" . ($i + 1) . "_sur_" . $totalPhotos . "." . $extension; // Nouveau nom de fichier
+                        $fileName = "photo-$id-" . ($i + 1) . "_sur_" . $totalPhotos . "." . $extension; // Nouveau nom de fichier
                         $targetPath = $photoDir . "/" . $fileName;
                         if (move_uploaded_file($tmpName, $targetPath)) {
                             $photoPaths[] = $targetPath;
@@ -54,7 +71,7 @@ foreach ($_POST as $key => $value) {
             $photoPathsString = implode(";", $photoPaths);
 
             // Insérer ou mettre à jour la table avec les données POST
-            $sql = $conn->prepare("UPDATE `$nomClient` SET note = :note, obsEcart = :obsEcart, suggPlanAction = :suggPlanAction, picPath = :picPath WHERE id = :id");
+            $sql = $conn->prepare("UPDATE `$validTableName` SET note = :note, obsEcart = :obsEcart, suggPlanAction = :suggPlanAction, picPath = :picPath WHERE id = :id");
             $sql->execute([
                 "note" => $note,
                 "obsEcart" => $obsEcart,
@@ -65,4 +82,5 @@ foreach ($_POST as $key => $value) {
         }
     }
 }
+
 header("Location: ../index.php?success=1&client=$nomClient");

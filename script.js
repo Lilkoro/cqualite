@@ -5,11 +5,15 @@ document.getElementById('download').addEventListener('click', () => {
     // Récupère l'élément avec l'attribut name-data
     const ele = document.querySelector('[name-data]');
     const nameDataValue = ele.getAttribute('name-data');
+    console.log(nameDataValue); // Affiche la valeur dans la console
     if (isDownloading) return; // Empêche l'exécution si déjà en cours
+    console.log('Téléchargement en cours...'); // Indique que le téléchargement est en cours
     isDownloading = true;
 
     const downloadButton = document.getElementById('download');
     downloadButton.disabled = true; // Désactive le bouton
+
+    console.log('Téléchargement en cours... 1'); // Indique que le téléchargement est en cours
 
     const element = document.getElementById('content'); // Sélectionne le contenu à convertir
     const options = {
@@ -29,6 +33,7 @@ document.getElementById('download').addEventListener('click', () => {
             orientation: 'portrait'
         }
     };
+    console.log('Téléchargement en cours... 2'); // Indique que le téléchargement est en cours
 
     // Convertit le contenu en PDF avec gestion multi-pages
     html2pdf().set(options).from(element).toPdf().get('pdf').then((pdf) => {
@@ -43,4 +48,6 @@ document.getElementById('download').addEventListener('click', () => {
         isDownloading = false; // Réinitialise le verrou
         downloadButton.disabled = false; // Réactive le bouton après la fin du téléchargement
     });
-});
+    
+    console.log('Téléchargement en cours... 2'); // Indique que le téléchargement est en cours
+});    

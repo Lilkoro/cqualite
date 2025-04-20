@@ -145,6 +145,7 @@ foreach ($themes as $themeId => $themeName) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="./img/ico.png">
     <title>Audit C-QUALité - <?php echo htmlspecialchars($auditTable); ?></title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
@@ -523,8 +524,17 @@ foreach ($themes as $themeId => $themeName) {
                 <button type="submit">Afficher</button>
             </form>
             <br><br>
-
-            <button id="download">Télécharger en PDF</button>
+            <div style="display: flex; justify-content: space-around;">
+                <button id="download">Télécharger en PDF</button>
+                <form action="dupliAudit.php" method="post">
+                    <input type="hidden" name="previousName" value="<?php echo htmlspecialchars($auditTable); ?>">
+                    <button type="submit">Dupliquer le rapport</but>
+                </form>
+                <form action="export.php" method="post">
+                    <input type="hidden" name="nomClient" value="<?php echo htmlspecialchars($auditTable); ?>">
+                    <button type="submit">Exporter le plan d'action</but>
+                </form>
+            </div>
 
             <!-- <form method="POST" action="download.php">
                 <br><br>
@@ -703,9 +713,4 @@ foreach ($themes as $themeId => $themeName) {
 <?php
 // Close connection
 $con->close();
-
-// Capture tout le contenu HTML
-$pageContent = ob_get_flush();
-file_put_contents("temp_content.html", $pageContent); // Sauvegarde dans un fichier temporaire
-echo $pageContent; // Affiche la page
 ?>
